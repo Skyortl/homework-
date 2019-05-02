@@ -1,0 +1,237 @@
+#include <iostream>
+#include <iomanip>
+#include <Windows.h>
+
+using namespace std;
+
+struct student 
+{
+	short sizeArrMarks = 5;
+	string name;
+	string surname;
+	short *progress = new short [sizeArrMarks];
+	void input()
+{
+		cout << "Name - ";
+		cin >> name;
+		cout << "Surname - ";
+		cin >> surname;
+		for (short i = 0; i < sizeArrMarks; i++)
+		{
+			cout << "Mark #" << i + 1 << " - ";
+			cin >> progress[i];
+			while (progress[i] > 5 || progress[i] < 1)
+			{
+				cout << "It isn't correct mark, 0 < mark < 6" << endl;
+				cin >> progress[i];
+			}
+		}
+	}
+	void print()
+	{
+		cout << "Name  - " << name << endl;
+		cout << "Surname - " << surname << endl;
+		cout << "Marks: ";
+		for (short i = 0; i < sizeArrMarks; i++)
+		{
+			cout << progress[i] << setw(2);
+		}
+		cout << endl;
+	}
+	
+};
+void changeSize(student &arr)
+{
+	short change = 1;
+	cout << "Do you want increase(++) or decrease(--) array?" << endl;
+	cout << "1. Decrease" << endl;
+	cout << "2. Increase" << endl;
+	cin >> change;
+	while (change != 1 && change != 2)
+	{
+		cout << "Enter again - " << endl;
+		cin >> change;
+	}
+	switch (change)
+	{
+	case 1:
+	{
+		arr.sizeArrMarks--;
+		short* progressNew = new short[arr.sizeArrMarks];
+		for (int i = 0; i < arr.sizeArrMarks; i++)
+		{
+			progressNew[i] = arr.progress[i];
+		}
+		arr.progress = new short[arr.sizeArrMarks];
+		for (int i = 0; i < arr.sizeArrMarks; i++)
+		{
+			arr.progress[i] = progressNew[i];
+		}
+
+		break;
+	}
+	case 2:
+	{
+		arr.sizeArrMarks++;
+		short* progressNew = new short[arr.sizeArrMarks];
+		for (int i = 0; i < arr.sizeArrMarks - 1; i++)
+		{
+			progressNew[i] = arr.progress[i];
+		}
+		arr.progress = new short[arr.sizeArrMarks];
+		for (int i = 0; i < arr.sizeArrMarks - 1; i++)
+		{
+			arr.progress[i] = progressNew[i];
+		}
+		cout << "Input mark #" << arr.sizeArrMarks << " - ";
+		cin >> arr.progress[arr.sizeArrMarks - 1];
+		break;
+	}
+	}
+
+
+
+}
+
+void listGoodStudents(student arr[10], short sizeEnter)
+{
+	system("cls");
+	float procent = 0;
+	short quanterMarks = 0;
+	short quanterStudents = 0;
+	short allProcents = 100;
+	const short markGood = 5;
+	for (short i = 0; i < sizeEnter; i++)
+	{
+		for (short j = 0; j < arr[i].sizeArrMarks; j++)
+		{
+			if (markGood == arr[i].progress[j])
+				quanterMarks++;
+		}
+		procent = allProcents * quanterMarks / arr[i].sizeArrMarks;
+		if (procent > 50)
+		{
+			quanterStudents++;
+			cout << "Student #" << quanterStudents << endl;
+			arr[i].print();
+			cout << endl << endl;
+		}
+		else if (i == sizeEnter - 1 && NULL == quanterStudents)
+			cout << "There are no good students" << endl;
+		quanterMarks = NULL;
+	}
+	Sleep(5000);
+
+}
+void listBadStudents(student arr[10], short sizeEnter)
+{
+	system("cls");
+	float procent = 0;
+	short quanterMarks = 0;
+	short quanterStudents = 0;
+	short allProcents = 100;
+	const short markBad = 3;
+	for (short i = 0; i < sizeEnter; i++)
+	{
+		for (short j = 0; j < arr[i].sizeArrMarks; j++)
+		{
+			if (markBad >= arr[i].progress[j])
+				quanterMarks++;
+		}
+		procent = allProcents * quanterMarks / arr[i].sizeArrMarks;
+		if (procent > 50)
+		{
+			quanterStudents++;
+			cout << "Student #" << quanterStudents << endl;
+			arr[i].print();
+			cout << endl << endl;
+		}
+		else if (i == sizeEnter - 1 && NULL == quanterStudents)
+			cout << "There are no bad students" << endl;
+		quanterMarks = NULL;
+	}
+	Sleep(5000);
+
+}
+int main() 
+{
+	ios::sync_with_stdio(false);
+	const short sizeArr = 10;
+	student firstCourse[sizeArr];
+	short i = 0;
+	short choice = 1;
+	bool exit = true;
+	for (; i < sizeArr && choice != 2; i++)
+	{
+		system("cls");
+		cout << "Student #" << i + 1 << endl;
+		firstCourse[i].input();
+		cout << endl;
+		cout << "Continue? (1. Yes. 2. No) - ";
+		cin >> choice;
+		while (choice != 1 && choice != 2)
+		{
+			cout << "It isn't correct variant, enter again - ";
+			cin >> choice;
+		}
+	}
+	do
+	{
+		system("cls");
+	cout << "1. Change array size " << endl;
+	cout << "2. Output list of good students" << endl;
+	cout << "3. Output list of bad students" << endl;
+	cout << "4. Exit" << endl;
+	cin >> choice;
+	while (choice > 4 || choice < 1)
+	{
+		cout << "Enter again - ";
+		cin >> choice;
+	}
+	system("cls");
+	switch (choice)
+	{
+	case 1:
+	{
+		for (short k = 0; k < i;k ++)
+		{
+			changeSize(firstCourse[k]);
+			cout << endl;
+			cout << "Continue? (1. Yes. 2. No) - ";
+			cin >> choice;
+			while (choice != 1 && choice != 2)
+			{
+				cout << "It isn't correct variant, enter again - ";
+				cin >> choice;
+			}
+			system("cls");
+		}
+		
+		break;
+	}
+	case 2:
+	{
+		listGoodStudents(firstCourse, i);
+		break;
+	}
+	case 3:
+	{
+		listBadStudents(firstCourse, i);
+		break;
+	}
+	case 4:
+	{
+		exit = false;
+		break;
+	}
+	default:
+		break;
+	}
+
+} while (true == exit);
+
+
+
+	system("pause");
+	return 0;
+}
